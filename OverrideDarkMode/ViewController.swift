@@ -5,6 +5,26 @@ import UIKit
 import SwiftUI
 
 class ViewController: UIViewController {
+  var label: UILabel = {
+    let label = UILabel()
+    label.textColor = .orange
+    label.font = .preferredFont(forTextStyle: .headline)
+    return label
+  }()
+
+  func updateTextLabel() {
+    switch UIScreen.main.traitCollection.userInterfaceStyle {
+    case .dark: label.text = "System is dark"
+    case .light: label.text = "System is light"
+    default: label.text = "System is unknown"
+    }
+  }
+
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(traitCollection)
+    updateTextLabel()
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -18,7 +38,7 @@ class ViewController: UIViewController {
 
     let swiftUIViewController = UIHostingController(rootView: SwiftUIView())
 
-    let stackView = UIStackView(arrangedSubviews: [makeSegmentedControl(), swiftUIViewController.view])
+    let stackView = UIStackView(arrangedSubviews: [label, makeSegmentedControl(), swiftUIViewController.view])
     stackView.axis = .vertical
     stackView.spacing = 10
     stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -27,6 +47,8 @@ class ViewController: UIViewController {
       stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
     ])
+
+    updateTextLabel()
   }
 
   func makeSegmentedControl() -> UISegmentedControl {
